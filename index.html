@@ -1,879 +1,529 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VALHUB — Competitive Tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --red: #ff4655;
-    --red-dim: #cc2233;
-    --red-glow: rgba(255,70,85,0.15);
-    --bg: #0f1117;
-    --bg2: #161820;
-    --bg3: #1e2028;
-    --bg4: #252830;
-    --border: rgba(255,255,255,0.07);
-    --border-red: rgba(255,70,85,0.3);
-    --text: #fffbe6;
-    --text-dim: rgba(255,251,230,0.55);
-    --text-muted: rgba(255,251,230,0.3);
-    --duelist: #ff6b6b;
-    --controller: #4ecdc4;
-    --initiator: #ffe66d;
-    --sentinel: #a8e6cf;
-    --font-head: 'Barlow Condensed', sans-serif;
-    --font-mono: 'Share Tech Mono', monospace;
-    --font-ui: 'Rajdhani', sans-serif;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VALORANT CASINO • SPIKE ROYALE</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@400;700&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); min-height: 100vh; overflow-x: hidden; }
+    :root {
+      --valorant-red: #c8102e;
+      --valorant-cyan: #00f0ff;
+    }
 
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    opacity: 0.4;
-  }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #ddd;
+      font-family: 'Roboto Mono', monospace;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+    }
 
-  /* SCAN LINE */
-  body::after {
-    content: '';
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-  }
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: #111;
+      padding: 16px 30px;
+      border-bottom: 4px solid var(--valorant-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
 
-  .wrap { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .header h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 2.1rem;
+      letter-spacing: 4px;
+      color: white;
+      text-shadow: 0 0 15px var(--valorant-red);
+      animation: titleAgent 3s infinite alternate;
+    }
 
-  /* NAV */
-  nav {
-    border-bottom: 1px solid var(--border);
-    background: rgba(15,17,23,0.95);
-    backdrop-filter: blur(12px);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .nav-inner {
-    display: flex; align-items: center; justify-content: space-between;
-    height: 60px;
-  }
-  .logo {
-    font-family: var(--font-head); font-size: 26px; font-weight: 800;
-    letter-spacing: 4px; color: var(--text);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .logo span { color: var(--red); }
-  .logo-diamond {
-    width: 10px; height: 10px; background: var(--red);
-    transform: rotate(45deg);
-  }
-  .nav-tabs { display: flex; gap: 2px; }
-  .tab-btn {
-    background: none; border: none; cursor: pointer;
-    font-family: var(--font-head); font-size: 13px; font-weight: 600;
-    letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase;
-    padding: 8px 16px; transition: all 0.2s;
-    border-bottom: 2px solid transparent;
-    position: relative; top: 1px;
-  }
-  .tab-btn:hover { color: var(--text); }
-  .tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+    @keyframes titleAgent {
+      from { text-shadow: 0 0 10px var(--valorant-red); }
+      to { text-shadow: 0 0 25px var(--valorant-red), 0 0 40px var(--valorant-cyan); }
+    }
 
-  /* PAGES */
-  .page { display: none; padding: 32px 0 80px; }
-  .page.active { display: block; }
+    .balance {
+      background: #1a1a1a;
+      padding: 10px 25px;
+      border: 3px solid var(--valorant-red);
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px rgba(200,16,46,0.5);
+      transition: all 0.4s;
+    }
 
-  /* SECTION HEADER */
-  .section-header {
-    display: flex; align-items: center; gap: 16px; margin-bottom: 28px;
-  }
-  .section-title {
-    font-family: var(--font-head); font-size: 28px; font-weight: 700;
-    letter-spacing: 3px; text-transform: uppercase; color: var(--text);
-  }
-  .section-line { flex: 1; height: 1px; background: var(--border); }
-  .section-badge {
-    font-family: var(--font-mono); font-size: 11px; color: var(--red);
-    border: 1px solid var(--border-red); padding: 3px 8px;
-  }
+    .balance.glow { animation: buyPhase 1.2s ease; }
 
-  /* MAP ROTATION */
-  .map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-  .map-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    position: relative; overflow: hidden; cursor: default;
-    transition: border-color 0.2s, transform 0.2s;
-    aspect-ratio: 16/9;
-  }
-  .map-card:hover { border-color: rgba(255,70,85,0.4); transform: translateY(-2px); }
-  .map-card.active-map { border-color: var(--red); }
-  .map-card.active-map::before {
-    content: 'EM ROTAÇÃO';
-    position: absolute; top: 8px; right: 8px; z-index: 3;
-    font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px;
-    background: var(--red); color: #fff; padding: 3px 6px;
-  }
-  .map-bg {
-    position: absolute; inset: 0;
-    background-size: cover; background-position: center;
-    filter: brightness(0.4) saturate(0.6);
-    transition: filter 0.3s;
-  }
-  .map-card:hover .map-bg { filter: brightness(0.5) saturate(0.8); }
-  .map-info {
-    position: absolute; inset: 0; display: flex; flex-direction: column;
-    justify-content: flex-end; padding: 12px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
-  }
-  .map-name {
-    font-family: var(--font-head); font-size: 20px; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase;
-  }
-  .map-type { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
-  .rotation-update {
-    font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
-    margin-bottom: 16px;
-  }
-  .rotation-update span { color: var(--red); }
+    .main {
+      flex: 1;
+      padding: 100px 40px 40px;
+      overflow-y: auto;
+    }
 
-  /* PLAYERS */
-  .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-  .player-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    padding: 20px; position: relative; transition: border-color 0.2s;
-  }
-  .player-card:hover { border-color: rgba(255,70,85,0.3); }
-  .player-card::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-    width: 3px; background: var(--red);
-  }
-  .player-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-  .player-avatar {
-    width: 46px; height: 46px; border: 1px solid var(--border-red);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-head); font-size: 20px; font-weight: 700;
-    color: var(--red); background: var(--red-glow); flex-shrink: 0;
-  }
-  .player-name { font-family: var(--font-head); font-size: 20px; font-weight: 700; letter-spacing: 1px; }
-  .player-role-badge {
-    display: inline-block; font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 1px; padding: 2px 8px; border: 1px solid;
-    text-transform: uppercase;
-  }
-  .player-role-badge.duelist { color: var(--duelist); border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.08); }
-  .player-role-badge.controller { color: var(--controller); border-color: rgba(78,205,196,0.3); background: rgba(78,205,196,0.08); }
-  .player-role-badge.initiator { color: var(--initiator); border-color: rgba(255,230,109,0.3); background: rgba(255,230,109,0.08); }
-  .player-role-badge.sentinel { color: var(--sentinel); border-color: rgba(168,230,207,0.3); background: rgba(168,230,207,0.08); }
-  .player-role-badge.flex { color: #b8b8ff; border-color: rgba(184,184,255,0.3); background: rgba(184,184,255,0.08); }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 30px;
+    }
 
-  .player-agents { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-  .agent-chip {
-    font-family: var(--font-mono); font-size: 11px; padding: 4px 10px;
-    background: var(--bg3); border: 1px solid var(--border); color: var(--text-dim);
-    cursor: pointer; transition: all 0.15s;
-  }
-  .agent-chip:hover { border-color: var(--red); color: var(--text); }
-  .agent-chip.selected { background: var(--red-glow); border-color: var(--red); color: var(--text); }
+    .game-card {
+      background: #181818;
+      border: 3px solid #444;
+      padding: 35px 25px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
+    }
 
-  .player-stats {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
-    border-top: 1px solid var(--border); padding-top: 14px; margin-top: 4px;
-  }
-  .stat-box { text-align: center; }
-  .stat-val { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--red); }
-  .stat-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); letter-spacing: 1px; }
+    .game-card:hover {
+      border-color: var(--valorant-red);
+      transform: scale(1.06) rotate(1deg);
+      box-shadow: 0 0 40px rgba(200,16,46,0.6);
+    }
 
-  .player-actions { display: flex; gap: 8px; margin-top: 14px; }
-  .btn {
-    font-family: var(--font-head); font-size: 13px; font-weight: 600;
-    letter-spacing: 2px; text-transform: uppercase;
-    padding: 8px 14px; border: 1px solid; cursor: pointer;
-    transition: all 0.15s; background: none;
-  }
-  .btn-primary { color: var(--red); border-color: var(--red); }
-  .btn-primary:hover { background: var(--red); color: #fff; }
-  .btn-ghost { color: var(--text-dim); border-color: var(--border); }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-  .btn-danger { color: #ff4655; border-color: rgba(255,70,85,0.3); }
-  .btn-danger:hover { background: rgba(255,70,85,0.15); }
+    .game-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent, rgba(200,16,46,0.08));
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
 
-  /* ADD PLAYER */
-  .add-player-area {
-    background: var(--bg2); border: 1px dashed rgba(255,70,85,0.2);
-    padding: 24px; margin-top: 16px;
-  }
-  .input-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-  .inp {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--text); font-family: var(--font-ui); font-size: 15px;
-    padding: 10px 14px; outline: none; flex: 1; min-width: 140px;
-    transition: border-color 0.2s;
-  }
-  .inp:focus { border-color: var(--red); }
-  .inp::placeholder { color: var(--text-muted); }
-  select.inp option { background: var(--bg3); }
-  .role-select-group { display: flex; gap: 8px; flex-wrap: wrap; }
-  .role-opt {
-    font-family: var(--font-mono); font-size: 11px; padding: 6px 12px;
-    border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
-    background: none; color: var(--text-dim); letter-spacing: 1px;
-  }
-  .role-opt[data-role="Duelist"].sel { border-color: var(--duelist); color: var(--duelist); background: rgba(255,107,107,0.08); }
-  .role-opt[data-role="Controller"].sel { border-color: var(--controller); color: var(--controller); background: rgba(78,205,196,0.08); }
-  .role-opt[data-role="Initiator"].sel { border-color: var(--initiator); color: var(--initiator); background: rgba(255,230,109,0.08); }
-  .role-opt[data-role="Sentinel"].sel { border-color: var(--sentinel); color: var(--sentinel); background: rgba(168,230,207,0.08); }
-  .role-opt[data-role="Flex"].sel { border-color: #b8b8ff; color: #b8b8ff; background: rgba(184,184,255,0.08); }
+    .game-card:hover::before { opacity: 1; }
 
-  /* LOGS */
-  .logs-controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-  .log-list { display: flex; flex-direction: column; gap: 8px; }
-  .log-entry {
-    background: var(--bg2); border: 1px solid var(--border);
-    padding: 14px 18px; display: flex; align-items: center; gap: 14px;
-    font-family: var(--font-mono); font-size: 13px;
-  }
-  .log-entry:hover { border-color: rgba(255,70,85,0.2); }
-  .log-ts { color: var(--text-muted); font-size: 11px; min-width: 120px; }
-  .log-player { color: var(--red); font-weight: 600; min-width: 100px; }
-  .log-event { color: var(--text-dim); flex: 1; }
-  .log-agent { color: var(--text); }
-  .log-map { color: var(--text-muted); font-size: 11px; }
+    /* MODAL COM ANIMAÇÃO SPIKE PLANT */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.98);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+    }
 
-  /* ADD SESSION */
-  .session-form {
-    background: var(--bg2); border: 1px solid var(--border);
-    padding: 24px; margin-bottom: 24px;
-  }
-  .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .modal-content {
+      width: 90%;
+      max-width: 840px;
+      background: #181818;
+      border: 5px solid var(--valorant-red);
+      padding: 40px;
+      transform: scale(0.6) translateY(100px);
+      opacity: 0;
+      animation: spikePlant 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
 
-  /* MODAL */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200;
-    display: none; align-items: center; justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2); border: 1px solid var(--border-red);
-    padding: 28px; width: 90%; max-width: 520px; max-height: 80vh; overflow-y: auto;
-    position: relative;
-  }
-  .modal-title { font-family: var(--font-head); font-size: 22px; font-weight: 700; letter-spacing: 2px; margin-bottom: 20px; }
-  .modal-close {
-    position: absolute; top: 14px; right: 18px;
-    background: none; border: none; color: var(--text-dim); font-size: 22px; cursor: pointer;
-    font-family: var(--font-head);
-  }
-  .modal-close:hover { color: var(--red); }
+    @keyframes spikePlant {
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
 
-  /* AGENT PICKER */
-  .agents-grid-pick { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 16px; }
-  .agent-pick-btn {
-    font-family: var(--font-mono); font-size: 11px; padding: 6px 10px;
-    border: 1px solid var(--border); background: none; cursor: pointer;
-    color: var(--text-dim); transition: all 0.15s; letter-spacing: 0.5px;
-  }
-  .agent-pick-btn:hover { border-color: rgba(255,70,85,0.4); color: var(--text); }
-  .agent-pick-btn.picked { background: var(--red-glow); border-color: var(--red); color: var(--text); }
-  .agent-group-title {
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px;
-    color: var(--text-muted); text-transform: uppercase; margin: 10px 0 6px;
-    width: 100%;
-  }
+    .close-btn {
+      float: right;
+      font-size: 3rem;
+      color: #666;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-  /* STATS PAGE */
-  .stats-overview { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 32px; }
-  .stat-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    padding: 20px; text-align: center;
-  }
-  .stat-card-val { font-family: var(--font-head); font-size: 40px; font-weight: 700; color: var(--red); line-height: 1; }
-  .stat-card-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 1px; margin-top: 6px; }
+    .close-btn:hover {
+      color: var(--valorant-red);
+      transform: rotate(90deg);
+    }
 
-  /* EMPTY STATE */
-  .empty { text-align: center; padding: 48px 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 13px; }
-  .empty strong { display: block; font-family: var(--font-head); font-size: 20px; color: var(--text-dim); margin-bottom: 8px; }
+    button {
+      background: var(--valorant-red);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 1.15rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px var(--valorant-red);
+    }
 
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border); padding: 20px 0;
-    text-align: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
-  }
+    button:active {
+      transform: scale(0.92);
+      box-shadow: 0 0 40px var(--valorant-cyan);
+    }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--bg4); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--red-dim); }
+    /* RESULTADOS VALORANT STYLE */
+    .result {
+      margin: 30px 0;
+      font-size: 1.8rem;
+      min-height: 110px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+    }
 
-  /* ANIMATIONS */
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  .fade-in { animation: fadeIn 0.3s ease both; }
+    .result.show {
+      animation: aceAnimation 0.8s forwards;
+    }
 
-  @keyframes pulse-red { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .live-dot {
-    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-    background: var(--red); animation: pulse-red 2s infinite; margin-right: 6px;
-  }
+    @keyframes aceAnimation {
+      0% { opacity: 0; transform: translateY(40px) scale(0.8); }
+      50% { transform: scale(1.15); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-  /* RESPONSIVE */
-  @media (max-width: 600px) {
-    .nav-tabs { gap: 0; }
-    .tab-btn { padding: 8px 10px; font-size: 11px; }
-    .map-grid { grid-template-columns: repeat(2, 1fr); }
-    .players-grid { grid-template-columns: 1fr; }
-  }
-</style>
+    .win { 
+      color: #4ade80; 
+      text-shadow: 0 0 20px #4ade80;
+      animation: headshotFlash 1.2s infinite alternate;
+    }
+
+    .loss {
+      color: #f87171;
+      animation: whiffShake 0.6s;
+    }
+
+    @keyframes headshotFlash {
+      from { text-shadow: 0 0 15px #4ade80; }
+      to { text-shadow: 0 0 35px #4ade80, 0 0 60px #00f0ff; }
+    }
+
+    @keyframes whiffShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-12px); }
+      75% { transform: translateX(12px); }
+    }
+
+    /* CHAT KILLFEED STYLE */
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      padding: 10px 16px;
+      border-left: 4px solid var(--valorant-red);
+      background: #1f1f1f;
+      opacity: 0;
+      transform: translateX(-50px);
+      animation: killfeedIn 0.5s forwards;
+    }
+
+    .message.you {
+      border-left-color: var(--valorant-cyan);
+      background: rgba(0, 240, 255, 0.1);
+    }
+
+    @keyframes killfeedIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+  </style>
 </head>
 <body>
 
-<nav>
-  <div class="wrap nav-inner">
-    <div class="logo">
-      <div class="logo-diamond"></div>
-      VAL<span>HUB</span>
+  <div class="header">
+    <h1>VALORANT CASINO</h1>
+    <div class="balance" id="balance">SALDO: <span id="saldo">14200</span> VP</div>
+  </div>
+
+  <div class="main">
+    <div class="games-grid">
+      <div class="game-card" onclick="openGame(1)"><h2>ROLETA DO SPIKE</h2><p>Plant ou Explode</p></div>
+      <div class="game-card" onclick="openGame(2)"><h2>BLACKJACK AGENTES</h2><p>Jett vs Reyna</p></div>
+      <div class="game-card" onclick="openGame(3)"><h2>CAÇA-NÍQUEL RADIANT</h2><p>Alinhe os agentes</p></div>
+      <div class="game-card" onclick="openGame(4)"><h2>DUEL DE RANKS</h2><p>1v1 contra amigo</p></div>
     </div>
-    <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchPage('maps')">MAPAS</button>
-      <button class="tab-btn" onclick="switchPage('players')">JOGADORES</button>
-      <button class="tab-btn" onclick="switchPage('logs')">SESSÕES</button>
-      <button class="tab-btn" onclick="switchPage('stats')">STATS</button>
+
+    <div style="margin-top:70px; background:#181818; border:3px solid #333; padding:25px;">
+      <h2 style="color:var(--valorant-red); margin-top:0;">HISTÓRICO DE APOSTAS</h2>
+      <table style="width:100%; border-collapse:collapse;">
+        <thead><tr style="background:#222;"><th style="padding:12px;">Hora</th><th>Jogador</th><th>Jogo</th><th>Resultado</th><th>VP</th></tr></thead>
+        <tbody id="history-body"></tbody>
+      </table>
+      <button onclick="exportLogs()" style="margin-top:20px;">EXPORTAR LOGS.TXT</button>
     </div>
   </div>
-</nav>
 
-<!-- MAPS PAGE -->
-<div id="page-maps" class="page active">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-title">Rotação de Mapas</div>
-      <div class="section-line"></div>
-      <div class="section-badge"><span class="live-dot"></span>EPISÓDIO 9</div>
-    </div>
-    <div class="rotation-update">Rotação atual do competitivo — última atualização: <span id="rotation-date"></span></div>
-    <div class="map-grid" id="map-grid"></div>
-
-    <div style="margin-top: 40px;">
-      <div class="section-header">
-        <div class="section-title">Todos os Mapas</div>
-        <div class="section-line"></div>
-      </div>
-      <div class="map-grid" id="all-maps-grid"></div>
+  <!-- CHAT KILLFEED -->
+  <div style="width:360px; background:#111; border-left:4px solid var(--valorant-red); display:flex; flex-direction:column;">
+    <div style="background:#1a1a1a; padding:16px; text-align:center; font-size:1.2rem; border-bottom:3px solid var(--valorant-red);">KILLFEED DA CREW</div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div style="padding:16px; background:#111;">
+      <input id="chat-input" style="width:100%; padding:14px; background:#222; border:2px solid #444; color:white;" placeholder="Digite aqui...">
+      <button onclick="sendMessage()" style="width:100%; margin-top:8px;">ENVIAR</button>
     </div>
   </div>
-</div>
 
-<!-- PLAYERS PAGE -->
-<div id="page-players" class="page">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-title">Jogadores</div>
-      <div class="section-line"></div>
-      <div class="section-badge" id="player-count-badge">0 JOGADORES</div>
-    </div>
-    <div class="players-grid" id="players-grid"></div>
-
-    <div style="margin-top: 24px;">
-      <button class="btn btn-primary" onclick="toggleAddPlayer()">+ ADICIONAR JOGADOR</button>
-    </div>
-
-    <div class="add-player-area" id="add-player-area" style="display:none; margin-top:12px;">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;letter-spacing:2px;margin-bottom:16px;">NOVO JOGADOR</div>
-      <div class="input-row">
-        <input class="inp" id="new-player-name" placeholder="Username (ex: Taco#BR1)" />
-        <input class="inp" id="new-player-ign" placeholder="Rank (ex: Gold 3)" style="max-width:160px;" />
-      </div>
-      <div style="margin-bottom:10px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);letter-spacing:1px;">ROLE PRINCIPAL</div>
-      <div class="role-select-group" id="role-select-group">
-        <button class="role-opt" data-role="Duelist" onclick="selectRole(this)">DUELIST</button>
-        <button class="role-opt" data-role="Controller" onclick="selectRole(this)">CONTROLLER</button>
-        <button class="role-opt" data-role="Initiator" onclick="selectRole(this)">INITIATOR</button>
-        <button class="role-opt" data-role="Sentinel" onclick="selectRole(this)">SENTINEL</button>
-        <button class="role-opt" data-role="Flex" onclick="selectRole(this)">FLEX</button>
-      </div>
-      <div style="margin:14px 0 10px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);letter-spacing:1px;">AGENTES PRINCIPAIS (seleciona até 5)</div>
-      <div id="new-player-agents" class="agents-grid-pick"></div>
-      <div class="input-row" style="margin-top:10px;">
-        <button class="btn btn-primary" onclick="addPlayer()">ADICIONAR</button>
-        <button class="btn btn-ghost" onclick="toggleAddPlayer()">CANCELAR</button>
-      </div>
+  <!-- MODAL -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">×</span>
+      <div id="game-body"></div>
     </div>
   </div>
-</div>
 
-<!-- LOGS PAGE -->
-<div id="page-logs" class="page">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-title">Sessões de Jogo</div>
-      <div class="section-line"></div>
-      <div class="section-badge" id="log-count-badge">0 LOGS</div>
-    </div>
+  <script>
+    let saldo = 14200;
+    let historico = [];
+    let mensagens = [];
 
-    <div class="session-form">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;letter-spacing:2px;margin-bottom:16px;">REGISTAR SESSÃO</div>
-      <div class="form-grid">
-        <select class="inp" id="log-player">
-          <option value="">Jogador</option>
-        </select>
-        <select class="inp" id="log-agent">
-          <option value="">Agente</option>
-        </select>
-        <select class="inp" id="log-map">
-          <option value="">Mapa</option>
-        </select>
-        <input class="inp" id="log-result" placeholder="Resultado (ex: 13-7 W)" />
-        <input class="inp" id="log-kda" placeholder="KDA (ex: 22/8/5)" />
-        <input class="inp" id="log-notes" placeholder="Notas (opcional)" />
-      </div>
-      <button class="btn btn-primary" onclick="addLog()">REGISTAR</button>
-    </div>
-
-    <div class="logs-controls">
-      <select class="inp" id="filter-player" style="max-width:180px;" onchange="renderLogs()">
-        <option value="">Todos os jogadores</option>
-      </select>
-      <select class="inp" id="filter-map" style="max-width:160px;" onchange="renderLogs()">
-        <option value="">Todos os mapas</option>
-      </select>
-      <button class="btn btn-ghost" onclick="clearFilters()">LIMPAR FILTROS</button>
-      <button class="btn btn-danger" onclick="clearAllLogs()" style="margin-left:auto;">LIMPAR LOGS</button>
-    </div>
-
-    <div class="log-list" id="log-list"></div>
-  </div>
-</div>
-
-<!-- STATS PAGE -->
-<div id="page-stats" class="page">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-title">Estatísticas</div>
-      <div class="section-line"></div>
-    </div>
-    <div class="stats-overview" id="stats-overview"></div>
-    <div id="per-player-stats"></div>
-  </div>
-</div>
-
-<!-- MODAL: Edit Player -->
-<div class="modal-overlay" id="edit-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title">EDITAR JOGADOR</div>
-    <input class="inp" id="edit-name" placeholder="Username" style="width:100%;margin-bottom:10px;" />
-    <input class="inp" id="edit-rank" placeholder="Rank" style="width:100%;margin-bottom:14px;" />
-    <div style="margin-bottom:10px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">ROLE PRINCIPAL</div>
-    <div class="role-select-group" id="edit-role-group">
-      <button class="role-opt" data-role="Duelist" onclick="selectEditRole(this)">DUELIST</button>
-      <button class="role-opt" data-role="Controller" onclick="selectEditRole(this)">CONTROLLER</button>
-      <button class="role-opt" data-role="Initiator" onclick="selectEditRole(this)">INITIATOR</button>
-      <button class="role-opt" data-role="Sentinel" onclick="selectEditRole(this)">SENTINEL</button>
-      <button class="role-opt" data-role="Flex" onclick="selectEditRole(this)">FLEX</button>
-    </div>
-    <div style="margin:14px 0 8px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">AGENTES PRINCIPAIS</div>
-    <div id="edit-agents-grid" class="agents-grid-pick"></div>
-    <div style="display:flex;gap:8px;margin-top:16px;">
-      <button class="btn btn-primary" onclick="saveEdit()">GUARDAR</button>
-      <button class="btn btn-ghost" onclick="closeModal()">CANCELAR</button>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="wrap">VALHUB © 2025 — Dados guardados localmente no teu browser</div>
-</footer>
-
-<script>
-// ===== DATA =====
-const MAPS_ROTATION = ['Abyss','Ascent','Bind','Haven','Lotus','Split','Sunset'];
-const ALL_MAPS = ['Abyss','Ascent','Bind','Breeze','Fracture','Haven','Icebox','Lotus','Pearl','Split','Sunset'];
-
-const MAP_COLORS = {
-  Abyss:'#1a1a2e', Ascent:'#2d1b00', Bind:'#001a2d', Breeze:'#002d1b',
-  Fracture:'#1a002d', Haven:'#002d2d', Icebox:'#001a3d', Lotus:'#2d1a00',
-  Pearl:'#00152d', Split:'#1a2d00', Sunset:'#2d1500'
-};
-
-const AGENTS = {
-  Duelist: ['Jett','Neon','Phoenix','Raze','Reyna','Yoru','Iso'],
-  Controller: ['Astra','Brimstone','Harbor','Omen','Viper','Clove'],
-  Initiator: ['Breach','Fade','Gekko','Kay/O','Skye','Sova','Tejo'],
-  Sentinel: ['Chamber','Cypher','Deadlock','Killjoy','Sage','Vyse']
-};
-const ALL_AGENTS = Object.values(AGENTS).flat();
-
-// ===== STATE =====
-let players = JSON.parse(localStorage.getItem('valhub_players') || '[]');
-let logs = JSON.parse(localStorage.getItem('valhub_logs') || '[]');
-let newPlayerRole = '';
-let newPlayerAgents = [];
-let editingId = null;
-let editRole = '';
-let editAgents = [];
-
-function save() {
-  localStorage.setItem('valhub_players', JSON.stringify(players));
-  localStorage.setItem('valhub_logs', JSON.stringify(logs));
-}
-
-// ===== NAV =====
-function switchPage(p) {
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('page-' + p).classList.add('active');
-  event.target.classList.add('active');
-  if (p === 'logs') { populateLogSelects(); renderLogs(); }
-  if (p === 'stats') renderStats();
-}
-
-// ===== MAPS =====
-function renderMaps() {
-  const now = new Date();
-  document.getElementById('rotation-date').textContent = now.toLocaleDateString('pt-PT', {day:'2-digit',month:'long',year:'numeric'});
-
-  const rotEl = document.getElementById('map-grid');
-  rotEl.innerHTML = MAPS_ROTATION.map(m => mapCardHTML(m, true)).join('');
-
-  const allEl = document.getElementById('all-maps-grid');
-  const notInRot = ALL_MAPS.filter(m => !MAPS_ROTATION.includes(m));
-  allEl.innerHTML = notInRot.map(m => mapCardHTML(m, false)).join('');
-}
-
-function mapCardHTML(name, inRotation) {
-  const col = MAP_COLORS[name] || '#1a1a1a';
-  return `<div class="map-card ${inRotation ? 'active-map' : ''}">
-    <div class="map-bg" style="background:${col};background-image:linear-gradient(135deg, ${col} 0%, #0f1117 100%);"></div>
-    <div class="map-info">
-      <div class="map-name">${name}</div>
-      <div class="map-type">${inRotation ? 'COMPETITIVO' : 'FORA DE ROTAÇÃO'}</div>
-    </div>
-  </div>`;
-}
-
-// ===== PLAYERS =====
-function renderPlayers() {
-  const grid = document.getElementById('players-grid');
-  document.getElementById('player-count-badge').textContent = players.length + ' JOGADORES';
-
-  if (!players.length) {
-    grid.innerHTML = '<div class="empty"><strong>SEM JOGADORES</strong>Adiciona o primeiro jogador abaixo</div>';
-    return;
-  }
-
-  grid.innerHTML = players.map(p => {
-    const sessions = logs.filter(l => l.player === p.id).length;
-    const wins = logs.filter(l => l.player === p.id && l.result && l.result.toUpperCase().endsWith('W')).length;
-    const roleClass = (p.role || 'flex').toLowerCase();
-    const initials = p.name.split(/[^a-zA-Z]/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || p.name[0].toUpperCase();
-    const agentChips = (p.agents || []).map(a => `<div class="agent-chip selected">${a}</div>`).join('');
-
-    return `<div class="player-card fade-in">
-      <div class="player-header">
-        <div class="player-avatar">${initials}</div>
-        <div>
-          <div class="player-name">${p.name}</div>
-          <div style="display:flex;gap:6px;align-items:center;margin-top:4px;">
-            <span class="player-role-badge ${roleClass}">${p.role || 'FLEX'}</span>
-            ${p.rank ? `<span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">${p.rank}</span>` : ''}
-          </div>
-        </div>
-      </div>
-      ${agentChips ? `<div class="player-agents">${agentChips}</div>` : ''}
-      <div class="player-stats">
-        <div class="stat-box"><div class="stat-val">${sessions}</div><div class="stat-label">SESSÕES</div></div>
-        <div class="stat-box"><div class="stat-val">${wins}</div><div class="stat-label">VITÓRIAS</div></div>
-        <div class="stat-box"><div class="stat-val">${sessions ? Math.round(wins/sessions*100) : 0}%</div><div class="stat-label">WIN RATE</div></div>
-      </div>
-      <div class="player-actions">
-        <button class="btn btn-primary" onclick="openEdit('${p.id}')">EDITAR</button>
-        <button class="btn btn-ghost" onclick="logSession('${p.id}')">+ SESSÃO</button>
-        <button class="btn btn-danger" onclick="removePlayer('${p.id}')">✕</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function toggleAddPlayer() {
-  const el = document.getElementById('add-player-area');
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-  if (el.style.display === 'block') buildAgentPicker('new-player-agents', newPlayerAgents, toggleNewAgent);
-}
-
-function buildAgentPicker(containerId, selectedArr, toggleFn) {
-  const el = document.getElementById(containerId);
-  let html = '';
-  for (const [role, agents] of Object.entries(AGENTS)) {
-    html += `<div class="agent-group-title">${role}</div>`;
-    html += agents.map(a =>
-      `<button class="agent-pick-btn ${selectedArr.includes(a) ? 'picked' : ''}" onclick="${toggleFn.name}('${a}')">${a}</button>`
-    ).join('');
-  }
-  el.innerHTML = html;
-}
-
-function toggleNewAgent(name) {
-  if (newPlayerAgents.includes(name)) newPlayerAgents = newPlayerAgents.filter(a=>a!==name);
-  else if (newPlayerAgents.length < 5) newPlayerAgents.push(name);
-  buildAgentPicker('new-player-agents', newPlayerAgents, toggleNewAgent);
-}
-
-function selectRole(btn) {
-  document.querySelectorAll('#role-select-group .role-opt').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
-  newPlayerRole = btn.dataset.role;
-}
-
-function addPlayer() {
-  const name = document.getElementById('new-player-name').value.trim();
-  if (!name) { alert('Introduz um username!'); return; }
-  const player = {
-    id: Date.now().toString(),
-    name,
-    rank: document.getElementById('new-player-ign').value.trim(),
-    role: newPlayerRole || 'Flex',
-    agents: [...newPlayerAgents],
-    createdAt: new Date().toISOString()
-  };
-  players.push(player);
-  save();
-  document.getElementById('new-player-name').value = '';
-  document.getElementById('new-player-ign').value = '';
-  newPlayerRole = '';
-  newPlayerAgents = [];
-  document.querySelectorAll('#role-select-group .role-opt').forEach(b => b.classList.remove('sel'));
-  document.getElementById('add-player-area').style.display = 'none';
-  renderPlayers();
-}
-
-function removePlayer(id) {
-  if (!confirm('Remover jogador e todos os seus logs?')) return;
-  players = players.filter(p => p.id !== id);
-  logs = logs.filter(l => l.player !== id);
-  save(); renderPlayers();
-}
-
-function logSession(id) {
-  switchPage('logs');
-  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===2));
-  populateLogSelects();
-  document.getElementById('log-player').value = id;
-  document.getElementById('page-logs').scrollIntoView();
-}
-
-// ===== EDIT MODAL =====
-function openEdit(id) {
-  const p = players.find(x => x.id === id);
-  if (!p) return;
-  editingId = id;
-  editRole = p.role || 'Flex';
-  editAgents = [...(p.agents || [])];
-  document.getElementById('edit-name').value = p.name;
-  document.getElementById('edit-rank').value = p.rank || '';
-  document.querySelectorAll('#edit-role-group .role-opt').forEach(b => {
-    b.classList.toggle('sel', b.dataset.role === editRole);
-  });
-  buildAgentPicker('edit-agents-grid', editAgents, toggleEditAgent);
-  document.getElementById('edit-modal').classList.add('open');
-}
-
-function toggleEditAgent(name) {
-  if (editAgents.includes(name)) editAgents = editAgents.filter(a=>a!==name);
-  else if (editAgents.length < 5) editAgents.push(name);
-  buildAgentPicker('edit-agents-grid', editAgents, toggleEditAgent);
-}
-
-function selectEditRole(btn) {
-  document.querySelectorAll('#edit-role-group .role-opt').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
-  editRole = btn.dataset.role;
-}
-
-function saveEdit() {
-  const p = players.find(x => x.id === editingId);
-  if (!p) return;
-  p.name = document.getElementById('edit-name').value.trim() || p.name;
-  p.rank = document.getElementById('edit-rank').value.trim();
-  p.role = editRole;
-  p.agents = [...editAgents];
-  save(); closeModal(); renderPlayers();
-}
-
-function closeModal() {
-  document.getElementById('edit-modal').classList.remove('open');
-  editingId = null;
-}
-
-// ===== LOGS =====
-function populateLogSelects() {
-  const playerSel = document.getElementById('log-player');
-  const filterSel = document.getElementById('filter-player');
-  const cur = playerSel.value;
-  playerSel.innerHTML = '<option value="">Jogador...</option>' +
-    players.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-  if (cur) playerSel.value = cur;
-
-  filterSel.innerHTML = '<option value="">Todos os jogadores</option>' +
-    players.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-
-  // Agent select updates when player changes
-  document.getElementById('log-player').onchange = function() {
-    const p = players.find(x => x.id === this.value);
-    const agentSel = document.getElementById('log-agent');
-    if (p && p.agents && p.agents.length) {
-      agentSel.innerHTML = '<option value="">Agente...</option>' +
-        p.agents.map(a => `<option value="${a}">${a}</option>`).join('') +
-        '<option value="──────" disabled>──────</option>' +
-        ALL_AGENTS.filter(a => !p.agents.includes(a)).map(a => `<option value="${a}">${a}</option>`).join('');
-    } else {
-      agentSel.innerHTML = '<option value="">Agente...</option>' +
-        ALL_AGENTS.map(a => `<option value="${a}">${a}</option>`).join('');
+    function saveData() {
+      localStorage.setItem('vc_saldo', saldo);
+      localStorage.setItem('vc_historico', JSON.stringify(historico));
+      localStorage.setItem('vc_mensagens', JSON.stringify(mensagens));
     }
-  };
 
-  document.getElementById('log-agent').innerHTML = '<option value="">Agente...</option>' +
-    ALL_AGENTS.map(a => `<option value="${a}">${a}</option>`).join('');
+    function loadData() {
+      if (localStorage.getItem('vc_saldo')) saldo = parseInt(localStorage.getItem('vc_saldo'));
+      if (localStorage.getItem('vc_historico')) historico = JSON.parse(localStorage.getItem('vc_historico'));
+      if (localStorage.getItem('vc_mensagens')) mensagens = JSON.parse(localStorage.getItem('vc_mensagens'));
+    }
 
-  document.getElementById('log-map').innerHTML = '<option value="">Mapa...</option>' +
-    ALL_MAPS.map(m => `<option value="${m}">${m}</option>`).join('');
+    function animateSaldo(target) {
+      const el = document.getElementById('saldo');
+      let current = parseInt(el.textContent.replace(/\./g,'')) || 0;
+      const step = (target - current) / 25;
+      let count = 0;
+      const timer = setInterval(() => {
+        current += step;
+        count++;
+        el.textContent = Math.floor(current).toLocaleString('pt-BR');
+        if (count >= 25) {
+          clearInterval(timer);
+          el.textContent = target.toLocaleString('pt-BR');
+          document.getElementById('balance').classList.add('glow');
+          setTimeout(() => document.getElementById('balance').classList.remove('glow'), 1200);
+        }
+      }, 30);
+    }
 
-  document.getElementById('filter-map').innerHTML = '<option value="">Todos os mapas</option>' +
-    ALL_MAPS.map(m => `<option value="${m}">${m}</option>`).join('');
-}
+    function atualizarSaldo() {
+      animateSaldo(saldo);
+      saveData();
+    }
 
-function addLog() {
-  const player = document.getElementById('log-player').value;
-  const agent = document.getElementById('log-agent').value;
-  const map = document.getElementById('log-map').value;
-  const result = document.getElementById('log-result').value.trim();
-  const kda = document.getElementById('log-kda').value.trim();
-  const notes = document.getElementById('log-notes').value.trim();
-  if (!player || !agent || !map) { alert('Jogador, agente e mapa são obrigatórios!'); return; }
-  logs.unshift({ id: Date.now().toString(), player, agent, map, result, kda, notes, ts: new Date().toISOString() });
-  save();
-  document.getElementById('log-result').value = '';
-  document.getElementById('log-kda').value = '';
-  document.getElementById('log-notes').value = '';
-  renderLogs();
-  document.getElementById('log-count-badge').textContent = logs.length + ' LOGS';
-}
+    function addToHistory(jogador, jogo, resultado, vp) {
+      const hora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+      historico.unshift({hora, jogador, jogo, resultado, vp});
+      if (historico.length > 30) historico.pop();
+      renderHistory();
+      saveData();
+    }
 
-function renderLogs() {
-  const filterP = document.getElementById('filter-player') ? document.getElementById('filter-player').value : '';
-  const filterM = document.getElementById('filter-map') ? document.getElementById('filter-map').value : '';
-  let filtered = logs;
-  if (filterP) filtered = filtered.filter(l => l.player === filterP);
-  if (filterM) filtered = filtered.filter(l => l.map === filterM);
+    function renderHistory() {
+      const tbody = document.getElementById('history-body');
+      tbody.innerHTML = '';
+      historico.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.hora}</td>
+          <td>${item.jogador}</td>
+          <td>${item.jogo}</td>
+          <td class="${item.resultado === 'Vitória' ? 'win' : 'loss'}">${item.resultado}</td>
+          <td style="text-align:right; color:${item.vp > 0 ? '#4ade80' : '#f87171'}">${item.vp > 0 ? '+' : ''}${item.vp} VP</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-  document.getElementById('log-count-badge').textContent = filtered.length + ' LOGS';
-  const list = document.getElementById('log-list');
+    function addMessage(nome, texto, isYou = false) {
+      mensagens.push({nome, texto, isYou, time: new Date().toLocaleTimeString('pt-BR',{hour:'2-digit', minute:'2-digit'})});
+      if (mensagens.length > 35) mensagens.shift();
+      renderChat();
+      saveData();
+    }
 
-  if (!filtered.length) {
-    list.innerHTML = '<div class="empty"><strong>SEM SESSÕES</strong>Regista a primeira sessão acima</div>';
-    return;
-  }
+    function renderChat() {
+      const chat = document.getElementById('chat-messages');
+      chat.innerHTML = '';
+      mensagens.forEach(m => {
+        const div = document.createElement('div');
+        div.className = `message ${m.isYou ? 'you' : ''}`;
+        div.innerHTML = `<small>[${m.time}] </small><strong>${m.nome}:</strong> ${m.texto}`;
+        chat.appendChild(div);
+      });
+      chat.scrollTop = chat.scrollHeight;
+    }
 
-  list.innerHTML = filtered.map(l => {
-    const p = players.find(x => x.id === l.player);
-    const ts = new Date(l.ts);
-    const isWin = l.result && l.result.toUpperCase().endsWith('W');
-    const isLoss = l.result && l.result.toUpperCase().endsWith('L');
-    const resColor = isWin ? '#4ecdc4' : isLoss ? 'var(--red)' : 'var(--text-dim)';
-    return `<div class="log-entry fade-in">
-      <div class="log-ts">${ts.toLocaleDateString('pt-PT')} ${ts.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'})}</div>
-      <div class="log-player">${p ? p.name : '?'}</div>
-      <div class="log-agent">${l.agent}</div>
-      <div class="log-map" style="min-width:80px;">${l.map}</div>
-      <div style="font-size:12px;color:${resColor};min-width:80px;">${l.result || '—'}</div>
-      <div style="font-size:11px;color:var(--text-muted);min-width:80px;">${l.kda || '—'}</div>
-      <div class="log-event" style="font-size:11px;">${l.notes || ''}</div>
-      <button class="btn btn-danger" style="font-size:11px;padding:4px 8px;" onclick="deleteLog('${l.id}')">✕</button>
-    </div>`;
-  }).join('');
-}
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const txt = input.value.trim();
+      if (!txt) return;
+      addMessage("Você", txt, true);
+      input.value = '';
 
-function deleteLog(id) {
-  logs = logs.filter(l => l.id !== id);
-  save(); renderLogs();
-}
+      setTimeout(() => {
+        const amigos = ["JettGod", "PhoenixMain", "SovaOneTap", "ReynaCarry"];
+        const resp = ["Headshot!", "Boa!", "kkkkkk", "Radiant diff", "Alguém quer mais uma?"];
+        addMessage(amigos[Math.floor(Math.random()*amigos.length)], resp[Math.floor(Math.random()*resp.length)]);
+      }, 800);
+    }
 
-function clearFilters() {
-  document.getElementById('filter-player').value = '';
-  document.getElementById('filter-map').value = '';
-  renderLogs();
-}
+    function openGame(id) {
+      document.getElementById('modal').style.display = 'flex';
+      const body = document.getElementById('game-body');
 
-function clearAllLogs() {
-  if (!confirm('Apagar TODOS os logs?')) return;
-  logs = []; save(); renderLogs();
-}
-
-// ===== STATS =====
-function renderStats() {
-  const total = logs.length;
-  const wins = logs.filter(l => l.result && l.result.toUpperCase().endsWith('W')).length;
-  const wr = total ? Math.round(wins/total*100) : 0;
-  const agentCounts = {};
-  logs.forEach(l => { agentCounts[l.agent] = (agentCounts[l.agent]||0)+1; });
-  const topAgent = Object.entries(agentCounts).sort((a,b)=>b[1]-a[1])[0];
-  const mapCounts = {};
-  logs.forEach(l => { mapCounts[l.map] = (mapCounts[l.map]||0)+1; });
-  const topMap = Object.entries(mapCounts).sort((a,b)=>b[1]-a[1])[0];
-
-  document.getElementById('stats-overview').innerHTML = `
-    <div class="stat-card"><div class="stat-card-val">${total}</div><div class="stat-card-label">SESSÕES TOTAIS</div></div>
-    <div class="stat-card"><div class="stat-card-val">${wins}</div><div class="stat-card-label">VITÓRIAS</div></div>
-    <div class="stat-card"><div class="stat-card-val">${wr}%</div><div class="stat-card-label">WIN RATE GLOBAL</div></div>
-    <div class="stat-card"><div class="stat-card-val">${players.length}</div><div class="stat-card-label">JOGADORES</div></div>
-    <div class="stat-card"><div class="stat-card-val" style="font-size:22px;">${topAgent?topAgent[0]:'—'}</div><div class="stat-card-label">AGENTE MAIS JOGADO</div></div>
-    <div class="stat-card"><div class="stat-card-val" style="font-size:22px;">${topMap?topMap[0]:'—'}</div><div class="stat-card-label">MAPA MAIS JOGADO</div></div>
-  `;
-
-  const perPlayer = document.getElementById('per-player-stats');
-  if (!players.length) { perPlayer.innerHTML = ''; return; }
-
-  perPlayer.innerHTML = `
-    <div class="section-header" style="margin-top:32px;">
-      <div class="section-title">Por Jogador</div>
-      <div class="section-line"></div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:10px;">
-    ${players.map(p => {
-      const pLogs = logs.filter(l => l.player === p.id);
-      const pW = pLogs.filter(l => l.result && l.result.toUpperCase().endsWith('W')).length;
-      const pWR = pLogs.length ? Math.round(pW/pLogs.length*100) : 0;
-      const pAgents = {};
-      pLogs.forEach(l => { pAgents[l.agent] = (pAgents[l.agent]||0)+1; });
-      const pTop = Object.entries(pAgents).sort((a,b)=>b[1]-a[1]).slice(0,3);
-      const roleClass = (p.role||'flex').toLowerCase();
-      return `<div style="background:var(--bg2);border:1px solid var(--border);padding:16px 20px;display:grid;grid-template-columns:180px 1fr auto;gap:16px;align-items:center;">
-        <div>
-          <div style="font-family:var(--font-head);font-size:16px;font-weight:700;">${p.name}</div>
-          <span class="player-role-badge ${roleClass}" style="margin-top:4px;display:inline-block;">${p.role||'FLEX'}</span>
+      if (id === 1) body.innerHTML = `
+        <h2 style="text-align:center;color:#c8102e;">ROLETA DO SPIKE</h2>
+        <div style="text-align:center;margin:50px 0;">
+          <button onclick="jogarRoleta()">PLANTAR SPIKE - 800 VP</button>
         </div>
-        <div style="display:flex;gap:24px;">
-          <div><div style="font-family:var(--font-head);font-size:24px;font-weight:700;color:var(--red);">${pLogs.length}</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">SESSÕES</div></div>
-          <div><div style="font-family:var(--font-head);font-size:24px;font-weight:700;color:var(--red);">${pWR}%</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">WIN RATE</div></div>
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-            ${pTop.map(([a,n])=>`<div class="agent-chip selected">${a} <span style="color:var(--text-muted)">${n}</span></div>`).join('')}
-          </div>
+        <div id="result1" class="result"></div>
+      `;
+
+      if (id === 2) body.innerHTML = `
+        <h2 style="text-align:center;color:#c8102e;">BLACKJACK AGENTES</h2>
+        <div style="text-align:center;margin:50px 0;">
+          <button onclick="blackjack()">INICIAR MÃO - 500 VP</button>
         </div>
-        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">${p.rank||''}</div>
-      </div>`;
-    }).join('')}
-    </div>`;
-}
+        <div id="result2" class="result"></div>
+      `;
 
-// ===== INIT =====
-renderMaps();
-renderPlayers();
+      if (id === 3) body.innerHTML = `
+        <h2 style="text-align:center;color:#c8102e;">CAÇA-NÍQUEL RADIANT</h2>
+        <div id="slots" style="font-size:3rem;letter-spacing:15px;text-align:center;margin:40px 0;">JETT • PHOENIX • SAGE</div>
+        <div style="text-align:center;">
+          <button onclick="cacaNiquel()">GIRAR ULT - 300 VP</button>
+        </div>
+        <div id="result3" class="result"></div>
+      `;
 
-// Close modal on overlay click
-document.getElementById('edit-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-</script>
+      if (id === 4) body.innerHTML = `
+        <h2 style="text-align:center;color:#c8102e;">DUEL DE RANKS</h2>
+        <div style="text-align:center;margin:50px 0;">
+          <button onclick="duelRank()">1v1 - 1200 VP</button>
+        </div>
+        <div id="result4" class="result"></div>
+      `;
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    // ====================== JOGOS COM ANIMAÇÕES VALORANT ======================
+    function jogarRoleta() {
+      if (saldo < 800) return alert("Sem VP, vai farmar ranked");
+      saldo -= 800;
+      atualizarSaldo();
+      const res = document.getElementById('result1');
+      res.innerHTML = `<span style="color:#888;">PLANTANDO SPIKE...</span>`;
+
+      setTimeout(() => {
+        if (Math.random() > 0.4) {
+          saldo += 2600;
+          res.innerHTML = `<span class="win">💥 SPIKE EXPLODIU!<br>+2600 VP</span>`;
+          addToHistory("Você", "Roleta do Spike", "Vitória", 2600);
+        } else {
+          res.innerHTML = `<span class="loss">🛡️ DESARMADO...</span>`;
+          addToHistory("Você", "Roleta do Spike", "Derrota", -800);
+        }
+        atualizarSaldo();
+      }, 1600);
+    }
+
+    function blackjack() {
+      if (saldo < 500) return alert("Saldo insuficiente");
+      saldo -= 500;
+      atualizarSaldo();
+      const res = document.getElementById('result2');
+      res.innerHTML = `<span style="color:#888;">DANDO CARTAS...</span>`;
+
+      setTimeout(() => {
+        if (Math.random() > 0.47) {
+          saldo += 1550;
+          res.innerHTML = `<span class="win">ACE! +1550 VP</span>`;
+          addToHistory("Você", "Blackjack", "Vitória", 1550);
+        } else {
+          res.innerHTML = `<span class="loss">WHIFF...</span>`;
+          addToHistory("Você", "Blackjack", "Derrota", -500);
+        }
+        atualizarSaldo();
+      }, 1300);
+    }
+
+    function cacaNiquel() {
+      if (saldo < 300) return alert("Sem VP");
+      saldo -= 300;
+      atualizarSaldo();
+      const agentes = ["JETT","PHOENIX","SAGE","RAZE","REYNA","OMEN"];
+      const s1 = agentes[Math.floor(Math.random()*agentes.length)];
+      const s2 = agentes[Math.floor(Math.random()*agentes.length)];
+      const s3 = agentes[Math.floor(Math.random()*agentes.length)];
+      document.getElementById('slots').textContent = `${s1} • ${s2} • ${s3}`;
+
+      setTimeout(() => {
+        const res = document.getElementById('result3');
+        if (s1 === s2 && s2 === s3) {
+          saldo += 7200;
+          res.innerHTML = `<span class="win" style="font-size:2rem;">ULTIMATE JACKPOT!<br>+7200 VP</span>`;
+          addToHistory("Você", "Caça-Níquel", "Vitória", 7200);
+        } else if (s1 === s2 || s2 === s3) {
+          saldo += 950;
+          res.innerHTML = `<span class="win">+950 VP</span>`;
+          addToHistory("Você", "Caça-Níquel", "Vitória", 950);
+        } else {
+          res.innerHTML = `<span class="loss">MISS...</span>`;
+          addToHistory("Você", "Caça-Níquel", "Derrota", -300);
+        }
+        atualizarSaldo();
+      }, 800);
+    }
+
+    function duelRank() {
+      if (saldo < 1200) return alert("Saldo insuficiente");
+      saldo -= 1200;
+      atualizarSaldo();
+      const res = document.getElementById('result4');
+      res.innerHTML = `<span style="color:#888;">INICIANDO 1v1...</span>`;
+
+      setTimeout(() => {
+        if (Math.random() > 0.48) {
+          saldo += 3400;
+          res.innerHTML = `<span class="win">CLUTCH! +3400 VP</span>`;
+          addToHistory("Você", "Duel de Ranks", "Vitória", 3400);
+        } else {
+          res.innerHTML = `<span class="loss">ELIMINADO...</span>`;
+          addToHistory("Você", "Duel de Ranks", "Derrota", -1200);
+        }
+        atualizarSaldo();
+      }, 1500);
+    }
+
+    function exportLogs() {
+      let content = "VALORANT CASINO - LOGS\n";
+      content += `Data: ${new Date().toLocaleString('pt-BR')}\nSaldo: ${saldo} VP\n\n`;
+      historico.forEach(h => {
+        content += `[${h.hora}] ${h.jogador} | ${h.jogo} | ${h.resultado} | ${h.vp > 0 ? '+' : ''}${h.vp} VP\n`;
+      });
+      const blob = new Blob([content], {type: 'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'valorant-casino-logs.txt';
+      a.click();
+    }
+
+    // INIT
+    loadData();
+    atualizarSaldo();
+    renderHistory();
+    renderChat();
+
+    if (mensagens.length === 0) {
+      setTimeout(() => addMessage("JettGod", "Vamos farmar VP hoje?"), 800);
+      setTimeout(() => addMessage("SovaOneTap", "Eu to com 15k, quem topa?"), 1800);
+    }
+
+    document.getElementById('chat-input').addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+  </script>
 </body>
 </html>
